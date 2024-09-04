@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun provideHomeRepository(homeRepository: DashBoardRepository): IDashboardRepository
+    abstract fun provideDashBoardRepository(dashBoardRepository: DashBoardRepository): IDashboardRepository
 }

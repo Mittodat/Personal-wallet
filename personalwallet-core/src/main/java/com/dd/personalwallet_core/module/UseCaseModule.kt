@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class UseCaseModule {
 
     @Binds
-     abstract fun provideHomeUseCase(homeUseCase: DashBoardUseCase): IDashBoardUseCase
+     abstract fun provideHomeUseCase(dashBoardUseCase: DashBoardUseCase): IDashBoardUseCase
 }

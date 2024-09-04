@@ -1,6 +1,6 @@
 package com.dd.personalwallet_core.domain.repository
 
-import com.dd.personalwallet_core.data.ResponseData
+import com.dd.personalwallet_core.data.WeatherData
 import com.dd.personalwallet_core.data.networking.HomeApi
 import com.dd.personalwallet_core.domain.BaseRepository
 import com.dd.personalwallet_core.domain.Result
@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class DashBoardRepository @Inject constructor(private val homeApi: HomeApi): BaseRepository(), IDashboardRepository {
 
-    override suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<ResponseData> {
+    override suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData> {
         val response = homeApi.getCurrentWeather(lat, lon, apiKey)
 
         if (response.isSuccessful) {
@@ -20,5 +20,5 @@ class DashBoardRepository @Inject constructor(private val homeApi: HomeApi): Bas
 }
 
 interface IDashboardRepository {
-    suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<ResponseData>
+    suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData>
 }

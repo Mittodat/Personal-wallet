@@ -3,7 +3,7 @@ package com.dd.personalwallet_core.data
 import com.dd.personalwallet_core.iinterface.IResponse
 import com.google.gson.annotations.SerializedName
 
-data class ResponseData(
+data class WeatherData(
     @SerializedName("coord")
     val coord: Coord? = null,
 

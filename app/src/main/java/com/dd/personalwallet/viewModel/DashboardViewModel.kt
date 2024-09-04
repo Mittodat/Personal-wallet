@@ -4,7 +4,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dd.personalwallet_core.data.ResponseData
+import com.dd.personalwallet_core.data.WeatherData
 import com.dd.personalwallet_core.domain.usecase.IDashBoardUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ class DashboardViewModel @Inject constructor(): ViewModel() {
 
     @Inject lateinit var homeUseCase: IDashBoardUseCase
 
-    val responseData = MutableLiveData<ResponseData>()
+    val responseData = MutableLiveData<WeatherData>()
 
     val isButtonVisibility = ObservableField<Boolean>()
 
