@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:background="@drawable/bg_employee_item"
+    android:clipChildren="true"
+    android:clipToPadding="true">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatarImg"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/avatar_test"
+        app:shapeAppearanceOverlay="@style/CornerSize20" />
+
+    <TextView
+        android:id="@+id/nameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/avatarImg"
+        android:layout_marginHorizontal="10dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Tên: Đinh Thị Huyền"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/ageTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameTxt"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Tuổi: 40"
+        android:textSize="12sp" />
+
+    <!--            <RatingBar-->
+    <!--                android:id="@+id/ratingBar1"-->
+    <!--                style="@style/foodRatingBar"-->
+    <!--                android:layout_below="@id/ageTxt"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content">-->
+
+    <!--            </RatingBar>-->
+
+</RelativeLayout>

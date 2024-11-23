@@ -3,11 +3,13 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id("de.mannodermaus.android-junit5") version "1.10.0.0"
+
 }
 
 android {
     namespace 'com.dd.personalwallet'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.dd.personalwallet"
@@ -43,8 +45,16 @@ android {
         viewBinding true
     }
 
+
     dataBinding {
         enabled true
+    }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+
     }
 }
 
@@ -53,12 +63,11 @@ dependencies {
     implementation project(":personalwallet-core")
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    kapt 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
-    kapt 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.2'
+    implementation 'androidx.test.ext:junit-ktx:1.2.1'
+    kapt 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.6'
+    kapt 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
 
@@ -67,6 +76,13 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.44"
 
     // android test library
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "androidx.test:core:1.6.1"
+    testImplementation 'androidx.test:runner:1.6.2'
+    testImplementation 'androidx.test:rules:1.6.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
     // Mockito core
     testImplementation 'org.mockito:mockito-core:4.5.1'
@@ -79,11 +95,24 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'junit:junit:4.13.2'
+
 
     testImplementation 'com.google.dagger:hilt-android-testing:2.44'
     kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+
+    //material
+    implementation 'com.google.android.material:material:1.12.0'
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+
 
 }
 

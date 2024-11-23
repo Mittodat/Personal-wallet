@@ -1,7 +1,7 @@
-package com.dd.personalwallet_core.module
+package com.dd.personalwallet.module.usecase
 
-import com.dd.personalwallet_core.domain.usecase.DashBoardUseCase
-import com.dd.personalwallet_core.domain.usecase.IDashBoardUseCase
+import com.dd.personalwallet.domain.useCase.DashBoardUseCase
+import com.dd.personalwallet.domain.useCase.IDashBoardUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

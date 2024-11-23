@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import com.dd.personalwallet.R
 import com.dd.personalwallet.databinding.FragmentHomeBinding
 import com.dd.personalwallet.utils.DateTimeUtils
-import com.dd.personalwallet.viewModel.DashboardViewModel
 import com.dd.personalwallet.viewModel.HomeViewModel
 import com.dd.personalwallet_core.fragment.BaseFragment
 
@@ -40,5 +39,4 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     override fun loadData() {
     }
-
 }

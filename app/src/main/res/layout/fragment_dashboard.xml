@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -15,22 +17,77 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/clickText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:onClick="@{() -> vm.getRemoteDate()}"
-            android:text="click here" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/bannerViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            tools:layout_height="200dp" />
 
-        <Button
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/indicatorTabLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/clickText"
+            android:layout_below="@id/bannerViewPager"
             android:layout_centerHorizontal="true"
-            android:text="get API success"
-            android:visibility="@{vm.isButtonVisibility ? View.VISIBLE : View.GONE}" />
+            android:layout_gravity="center"
+            app:tabIndicator="@drawable/bg_tab_indicator"
+            app:tabRippleColor="@null"/>
+
+        <View
+            android:id="@+id/bannerSeparation"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/indicatorTabLayout"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorGrey" />
+
+        <TextView
+            android:id="@+id/titleTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bannerSeparation"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Nhân viên chăm sóc"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/employeeList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleTxt"
+            android:layout_marginTop="12dp"
+            android:clipChildren="false"
+            android:paddingHorizontal="8dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/clickText"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerInParent="true"-->
+    <!--            android:onClick="@{() -> vm.getRemoteDate()}"-->
+    <!--            android:text="click here" />-->
+
+    <!--        <Button-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_below="@+id/clickText"-->
+    <!--            android:layout_centerHorizontal="true"-->
+    <!--            android:text="get API success"-->
+    <!--            android:visibility="@{vm.isButtonVisibility ? View.VISIBLE : View.GONE}" />-->
+
+    <!--    </RelativeLayout>-->
 
 </layout>

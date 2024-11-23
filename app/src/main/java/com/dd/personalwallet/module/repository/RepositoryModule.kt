@@ -1,7 +1,7 @@
-package com.dd.personalwallet_core.module
+package com.dd.personalwallet.module.repository
 
-import com.dd.personalwallet_core.domain.repository.DashBoardRepository
-import com.dd.personalwallet_core.domain.repository.IDashboardRepository
+import com.dd.personalwallet.domain.repository.DashBoardRepository
+import com.dd.personalwallet.domain.repository.IDashboardRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

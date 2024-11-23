@@ -11,4 +11,8 @@ object DateTimeUtils {
         val year = calendar[Calendar.YEAR]
         return listOf(date, month, year)
     }
+
+    fun isEmailFormat(email: String): Boolean {
+        return email.contains("@gmail.com")
+    }
 }
