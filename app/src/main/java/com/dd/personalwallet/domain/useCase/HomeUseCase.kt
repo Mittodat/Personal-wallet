@@ -4,23 +4,23 @@ import com.dd.personalwallet.data.CareEmployee
 import com.dd.personalwallet.data.ShoppingBanner
 import com.dd.personalwallet_core.data.WeatherData
 import com.dd.personalwallet_core.domain.Result
-import com.dd.personalwallet.domain.repository.IDashboardRepository
+import com.dd.personalwallet.domain.repository.IHomeRepository
 import javax.inject.Inject
 
-class DashBoardUseCase @Inject constructor(private val dashBoardRepository: IDashboardRepository):
-    IDashBoardUseCase {
+class HomeUseCase @Inject constructor(private val homeRepository: IHomeRepository):
+    IHomeUseCase {
 
     override suspend fun getDataRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData> =
-        dashBoardRepository.getDataFromRemote(lat, lon, apiKey)
+        homeRepository.getDataFromRemote(lat, lon, apiKey)
 
     override suspend fun getCareEmployees(): Result<List<CareEmployee>> =
-        dashBoardRepository.getCareEmployees()
+        homeRepository.getCareEmployees()
 
     override suspend fun getBannerList(): Result<List<ShoppingBanner>> =
-        dashBoardRepository.getBannerList()
+        homeRepository.getBannerList()
 }
 
-interface IDashBoardUseCase {
+interface IHomeUseCase {
     suspend fun getDataRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData>
     suspend fun getCareEmployees(): Result<List<CareEmployee>>
     suspend fun getBannerList(): Result<List<ShoppingBanner>>

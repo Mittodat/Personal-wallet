@@ -1,6 +1,6 @@
 package com.dd.personalwallet.moduletest
 
-import com.dd.personalwallet.domain.repository.IDashboardRepository
+import com.dd.personalwallet.domain.repository.IHomeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -14,7 +14,7 @@ import org.mockito.Mockito.mock
 )
 object TestModule {
     @Provides
-    fun providesDashBoardRepository(): IDashboardRepository {
-        return mock(IDashboardRepository::class.java)
+    fun providesDashBoardRepository(): IHomeRepository {
+        return mock(IHomeRepository::class.java)
     }
 }

@@ -8,8 +8,8 @@ import com.dd.personalwallet_core.domain.BaseRepository
 import com.dd.personalwallet_core.domain.Result
 import javax.inject.Inject
 
-class DashBoardRepository @Inject constructor(private val homeApi: HomeApi): BaseRepository(),
-    IDashboardRepository {
+class HomeRepository @Inject constructor(private val homeApi: HomeApi): BaseRepository(),
+    IHomeRepository {
 
     override suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData> {
         val response = homeApi.getCurrentWeather(lat, lon, apiKey)
@@ -30,7 +30,7 @@ class DashBoardRepository @Inject constructor(private val homeApi: HomeApi): Bas
     }
 }
 
-interface IDashboardRepository {
+interface IHomeRepository {
     suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData>
     suspend fun getCareEmployees(): Result<List<CareEmployee>>
     suspend fun getBannerList(): Result<List<ShoppingBanner>>

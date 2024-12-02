@@ -1,7 +1,7 @@
 package com.dd.personalwallet.module.usecase
 
-import com.dd.personalwallet.domain.useCase.DashBoardUseCase
-import com.dd.personalwallet.domain.useCase.IDashBoardUseCase
+import com.dd.personalwallet.domain.useCase.HomeUseCase
+import com.dd.personalwallet.domain.useCase.IHomeUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class UseCaseModule {
 
     @Binds
-     abstract fun provideHomeUseCase(dashBoardUseCase: DashBoardUseCase): IDashBoardUseCase
+    abstract fun provideHomeUseCase(homeUseCase: HomeUseCase): IHomeUseCase
 }

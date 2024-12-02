@@ -4,8 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dd.personalwallet.utils.DateTimeUtils
 import com.dd.personalwallet_core.data.WeatherData
 import com.dd.personalwallet_core.domain.Result
-import com.dd.personalwallet.domain.repository.IDashboardRepository
-import com.dd.personalwallet.domain.useCase.DashBoardUseCase
+import com.dd.personalwallet.domain.repository.IHomeRepository
+import com.dd.personalwallet.domain.useCase.HomeUseCase
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase.assertEquals
@@ -22,13 +22,13 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class DashBoardUseCaseTest {
+class HomeUseCaseTest {
 
     @Inject
-    lateinit var dashBoardUseCase: DashBoardUseCase
+    lateinit var homeUseCase: HomeUseCase
 
     @Mock
-    lateinit var dashBoardRepository: IDashboardRepository
+    lateinit var dashBoardRepository: IHomeRepository
 
     @get: Rule
     var hiltRule = HiltAndroidRule(this)
@@ -48,7 +48,7 @@ class DashBoardUseCaseTest {
         Mockito.`when`(dashBoardRepository.getDataFromRemote(lat, lon, "dadad")).thenReturn(expectResult)
 
         // Act
-        val result = dashBoardUseCase.getDataRemote(lat, lon, "dadad")
+        val result = homeUseCase.getDataRemote(lat, lon, "dadad")
 
         // Assert
         assertEquals(expectResult, result)
