@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,7 +22,11 @@ import com.dd.personalwallet.databinding.LayoutItemEmployeeBinding
 import com.dd.personalwallet.viewModel.HomeViewModel
 import com.dd.personalwallet_core.fragment.BaseFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     private val homeViewModel: HomeViewModel by viewModels()
@@ -36,20 +43,31 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         )
 
         homeViewModel.getCareEmployeeList()
-//        homeViewModel.getBannerList()
+        homeViewModel.getBannerList()
 
         homeViewModel.responseData.observe(viewLifecycleOwner) {
             homeViewModel.isButtonVisibility.set(true)
         }
 
-        homeViewModel.careEmployee.observe(viewLifecycleOwner) {
-            val spacing = resources.getDimensionPixelSize(R.dimen.dashBroad_item_spacing)
-            binding.employeeList.apply {
-                this.layoutManager = layoutManager
-                this.adapter = EmployeeAdapter(it)
-//                this.addItemDecoration(SpacingItemDecoration(spacingHorizontal = spacing, 0))
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.careEmployeeState.collectLatest { employee ->
+                    binding.employeeList.apply {
+                        this.layoutManager = layoutManager
+                        this.adapter = EmployeeAdapter(employee)
+                    }
+                }
             }
         }
+
+//        homeViewModel.careEmployee.observe(viewLifecycleOwner) {
+//            val spacing = resources.getDimensionPixelSize(R.dimen.dashBroad_item_spacing)
+//            binding.employeeList.apply {
+//                this.layoutManager = layoutManager
+//                this.adapter = EmployeeAdapter(it)
+////                this.addItemDecoration(SpacingItemDecoration(spacingHorizontal = spacing, 0))
+//            }
+//        }
 
         homeViewModel.bannerShopping.observe(viewLifecycleOwner) {
             binding.bannerViewPager.adapter = BannerAdapter(it)

@@ -11,6 +11,8 @@ import com.dd.personalwallet_core.data.WeatherData
 import com.dd.personalwallet.domain.useCase.IHomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,6 +26,9 @@ class HomeViewModel @Inject constructor(): ViewModel() {
 
     private var _careEmployee = MutableLiveData<List<CareEmployee>>()
     val careEmployee: LiveData<List<CareEmployee>> = _careEmployee
+
+    private var _careEmployeeState = MutableStateFlow<List<CareEmployee>>(emptyList())
+    val careEmployeeState: StateFlow<List<CareEmployee>> = _careEmployeeState
 
     private var _bannerShopping = MutableLiveData<List<ShoppingBanner>>()
     val bannerShopping: LiveData<List<ShoppingBanner>> = _bannerShopping
@@ -44,7 +49,8 @@ class HomeViewModel @Inject constructor(): ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 homeUseCase.getCareEmployees().onSuccess {
-                    _careEmployee.postValue(it)
+//                    _careEmployee.postValue(it)
+                    _careEmployeeState.value = it
                 }
             }
         }
