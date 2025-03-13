@@ -1,8 +1,8 @@
 package com.dd.personalwallet.module.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.dd.personalwallet.viewModel.DashboardViewModel
 import com.dd.personalwallet.viewModel.HomeViewModel
+import com.dd.personalwallet.viewModel.DashBoardViewModel
 import com.dd.personalwallet.viewModel.MainViewModel
 import com.dd.personalwallet.viewModel.TransactionsViewModel
 import dagger.Module
@@ -26,7 +26,7 @@ object ViewModelModule {
 
     @Provides
     fun getDashboardViewModel(): ViewModel {
-        return DashboardViewModel()
+        return DashBoardViewModel()
     }
 
     @Provides

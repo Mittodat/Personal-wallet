@@ -1,12 +1,15 @@
-package com.dd.personalwallet_core.domain.repository
+package com.dd.personalwallet.domain.repository
 
+import com.dd.personalwallet.data.CareEmployee
+import com.dd.personalwallet.data.ShoppingBanner
 import com.dd.personalwallet_core.data.WeatherData
 import com.dd.personalwallet_core.data.networking.HomeApi
 import com.dd.personalwallet_core.domain.BaseRepository
 import com.dd.personalwallet_core.domain.Result
 import javax.inject.Inject
 
-class DashBoardRepository @Inject constructor(private val homeApi: HomeApi): BaseRepository(), IDashboardRepository {
+class HomeRepository @Inject constructor(private val homeApi: HomeApi): BaseRepository(),
+    IHomeRepository {
 
     override suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData> {
         val response = homeApi.getCurrentWeather(lat, lon, apiKey)
@@ -17,8 +20,18 @@ class DashBoardRepository @Inject constructor(private val homeApi: HomeApi): Bas
 
         return Result.Failure(response.toError())
     }
+
+    override suspend fun getCareEmployees(): Result<List<CareEmployee>> {
+        return Result.Success(CareEmployee.fatory)
+    }
+
+    override suspend fun getBannerList(): Result<List<ShoppingBanner>> {
+        return Result.Success(ShoppingBanner.fatory)
+    }
 }
 
-interface IDashboardRepository {
+interface IHomeRepository {
     suspend fun getDataFromRemote(lat: Double, lon: Double, apiKey: String): Result<WeatherData>
+    suspend fun getCareEmployees(): Result<List<CareEmployee>>
+    suspend fun getBannerList(): Result<List<ShoppingBanner>>
 }

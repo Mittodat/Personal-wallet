@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "PersonalWallet"
 include ':app'
 include ':personalwallet-core'
+include ':dynamicForm'

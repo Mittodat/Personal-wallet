@@ -1,33 +1,128 @@
 package com.dd.personalwallet.ui.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.Fragment
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.dd.personalwallet.R
+import com.dd.personalwallet.data.CareEmployee
+import com.dd.personalwallet.data.ShoppingBanner
 import com.dd.personalwallet.databinding.FragmentHomeBinding
-import com.dd.personalwallet.utils.DateTimeUtils
-import com.dd.personalwallet.viewModel.DashboardViewModel
+import com.dd.personalwallet.databinding.LayoutItemDashboardBannerBinding
+import com.dd.personalwallet.databinding.LayoutItemEmployeeBinding
 import com.dd.personalwallet.viewModel.HomeViewModel
 import com.dd.personalwallet_core.fragment.BaseFragment
+import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
-    private var tabLayoutModels = listOf<Fragment>()
+    private val scrollHandler = Handler(Looper.getMainLooper())
+    private var currentIndex = 0
 
-    @SuppressLint("DefaultLocale")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = homeViewModel
-        val now = DateTimeUtils.getCurrentDate()
-        val day = String.format("%02d", now[0])
-        val month = String.format("%02d", now[1])
-        val year = now[2]
 
-        homeViewModel.currentDateTime.set("$day, $month, $year")
+        val layoutManager = LinearLayoutManager(requireContext(),
+            LinearLayoutManager.HORIZONTAL, false
+        )
+
+        homeViewModel.getCareEmployeeList()
+        homeViewModel.getBannerList()
+
+        homeViewModel.responseData.observe(viewLifecycleOwner) {
+            homeViewModel.isButtonVisibility.set(true)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.careEmployeeState.collectLatest { employee ->
+                    binding.employeeList.apply {
+                        this.layoutManager = layoutManager
+                        this.adapter = EmployeeAdapter(employee)
+                    }
+                }
+            }
+        }
+
+//        homeViewModel.careEmployee.observe(viewLifecycleOwner) {
+//            val spacing = resources.getDimensionPixelSize(R.dimen.dashBroad_item_spacing)
+//            binding.employeeList.apply {
+//                this.layoutManager = layoutManager
+//                this.adapter = EmployeeAdapter(it)
+////                this.addItemDecoration(SpacingItemDecoration(spacingHorizontal = spacing, 0))
+//            }
+//        }
+
+        homeViewModel.bannerShopping.observe(viewLifecycleOwner) {
+            binding.bannerViewPager.adapter = BannerAdapter(it)
+            TabLayoutMediator(binding.indicatorTabLayout, binding.bannerViewPager) { _, _ -> }.attach()
+
+            startAutoScroll(it)
+        }
+    }
+
+    class ViewHolder(val binding: LayoutItemEmployeeBinding) : RecyclerView.ViewHolder(binding.root)
+
+    inner class EmployeeAdapter(private val careEmployees: List<CareEmployee>) : RecyclerView.Adapter<ViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val binding = LayoutItemEmployeeBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+            return ViewHolder(binding)
+        }
+
+        override fun getItemCount() = careEmployees.size
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.binding.nameTxt.text = careEmployees[position].name
+            holder.binding.ageTxt.text = careEmployees[position].age.toString()
+        }
+    }
+
+    class BannerViewHolder(val binding: LayoutItemDashboardBannerBinding) : RecyclerView.ViewHolder(binding.root)
+
+    inner class BannerAdapter(private val items: List<ShoppingBanner>) : RecyclerView.Adapter<BannerViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
+            val binding = LayoutItemDashboardBannerBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+            return BannerViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
+            val item = items[position]
+            Glide.with(requireContext())
+                .load(item.image)
+                .into(holder.binding.bannerImg)
+        }
+
+        override fun getItemCount(): Int = items.size
+    }
+
+    private fun startAutoScroll(bannerItems: List<ShoppingBanner>) {
+        scrollHandler.postDelayed(object : Runnable {
+            override fun run() {
+                currentIndex = (currentIndex + 1) % bannerItems.size
+                binding.bannerViewPager.currentItem = currentIndex
+                scrollHandler.postDelayed(this, 3000) // 3-second interval
+            }
+        }, 3000)
     }
 
     override fun getLayoutId() = R.layout.fragment_home
@@ -40,5 +135,4 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     override fun loadData() {
     }
-
 }
