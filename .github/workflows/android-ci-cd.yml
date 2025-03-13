@@ -1,0 +1,78 @@
+name: android CICD
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin17'
+          java-version: '17'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Project
+        run: ./gradlew assembleDebug
+
+      - name: Run Tests
+        run: ./gradlew test
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+  release:
+    name: build & release
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Jdk
+        uses: actions/setup-java@v3
+        with:
+            distribution: 'temurin'
+            java-version: '17'
+
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
+
+      - name: Create signing properties
+        run: |
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > keystore.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
+          echo "storeFile=keystore.jks" >> keystore.properties
+          
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+          - name: Upload Release APK
+            uses: actions/upload-artifact@v3
+            with:
+              name: app-release
+              path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Deploy to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+            appId: ${{ secrets.FIREBASE_APP_ID }}
+            serviceCredentialsJson: ${{ secrets.FIREBASE_CREDENTIALS }}
+            groups: testers
+            file: app/build/outputs/apk/release/app-release.apk

@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id("de.mannodermaus.android-junit5") version "1.10.0.0"
+    id 'com.google.gms.google-services'
 
 }
 
@@ -18,13 +19,40 @@ android {
             keyAlias 'careplus2025'
             keyPassword '01678195241'
         }
+
+        release {
+            def keystoreFile = null
+            def keyStorePassword = '', alias = '', password = ''
+
+            storeFile = file('signing/debug/keystore.jks')
+            def propsFile = file('signing/debug/signing.properties')
+            if (propsFile.exists()) {
+                keystoreFile = file('signing/debug/keystore.jks')
+                if (keystoreFile.exists()) {
+                    def props = new Properties()
+                    props.load(new FileInputStream(propsFile))
+
+                    keyStorePassword = props['storePassword']
+                    alias = props['keyAlias']
+                    password = props['keyPassword']
+                } else {
+                    println "signing/release/keystore.jks file missing"
+                }
+            } else
+                println "signing/release/signing.properties file missing"
+
+            storeFile = keystoreFile
+            storePassword = keyStorePassword
+            keyAlias = alias
+            keyPassword = password
+        }
     }
 
     defaultConfig {
         applicationId "com.dd.personalwallet"
         minSdk 33
         targetSdk 34
-        versionCode 3
+        versionCode 6
         versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -40,9 +68,12 @@ android {
         }
 
         release {
-            debuggable true
+            debuggable false
             minifyEnabled false
+            signingConfig = signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources false
+
         }
     }
 
@@ -87,6 +118,10 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "androidx.hilt:hilt-compiler:1.2.0"
     kapt "com.google.dagger:hilt-compiler:2.44"
+
+    //google service
+    implementation platform('com.google.firebase:firebase-bom:33.10.0')
+    implementation 'com.google.firebase:firebase-analytics'
 
 //    //Jetpack Compose
 //
