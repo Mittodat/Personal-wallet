@@ -120,7 +120,7 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.44"
 
     //google service
-    implementation platform('com.google.firebase:firebase-bom:33.10.0')
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-analytics'
 
 //    //Jetpack Compose
