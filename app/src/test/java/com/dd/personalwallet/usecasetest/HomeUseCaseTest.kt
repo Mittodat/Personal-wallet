@@ -1,66 +1,76 @@
 package com.dd.personalwallet.usecasetest
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.dd.personalwallet.utils.DateTimeUtils
-import com.dd.personalwallet_core.data.WeatherData
+import com.dd.personalwallet.data.CareEmployee
+import com.dd.personalwallet.domain.repository.HomeRepository
 import com.dd.personalwallet_core.domain.Result
-import com.dd.personalwallet.domain.repository.IHomeRepository
 import com.dd.personalwallet.domain.useCase.HomeUseCase
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.runBlocking
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
-import javax.inject.Inject
+import com.dd.personalwallet_core.domain.Error
+import io.mockk.clearMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-
-@HiltAndroidTest
-@RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 class HomeUseCaseTest {
 
-    @Inject
-    lateinit var homeUseCase: HomeUseCase
+    private lateinit var getHomeUseCase: HomeUseCase
 
-    @Mock
-    lateinit var dashBoardRepository: IHomeRepository
+    private val homeRepository: HomeRepository = mockk()
 
-    @get: Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @Before
+    @BeforeEach
     fun setUp() {
-        hiltRule.inject()
+        getHomeUseCase = HomeUseCase(homeRepository)
+
     }
 
     @Test
-    fun `invoke should return data when repository call is successful`() = runBlocking {
-        val lat = 12.2
-        val lon = 31.3
+    fun `invoke should return data when repository call is successful`() = runTest {
 
-        val expectResult = Result.Success(WeatherData(WeatherData.Coord("10.20","100.332")))
+        val fakeEmployee = listOf(CareEmployee(name = "dat", age = 18, detail = "lam viec sieng nang"))
+        coEvery { homeRepository.getCareEmployees() } returns Result.Success(fakeEmployee)
 
-        Mockito.`when`(dashBoardRepository.getDataFromRemote(lat, lon, "dadad")).thenReturn(expectResult)
+        //when
 
-        // Act
-        val result = homeUseCase.getDataRemote(lat, lon, "dadad")
+        val result = getHomeUseCase.getCareEmployees()
 
-        // Assert
-        assertEquals(expectResult, result)
+        //then
+
+        var isSuccess = false
+        result.onSuccess {
+            isSuccess = true
+        }
+
+        assert(isSuccess)
+
+        coVerify { homeRepository.getCareEmployees()}
+
     }
 
     @Test
-    fun `invoke should return true when it is correct emailFormat`() {
-        assertTrue(DateTimeUtils.isEmailFormat("dat.nguyenvotan@gmail.com"))
+    fun `invoke should return data when repository call is fail`() = runTest {
+        coEvery { homeRepository.getCareEmployees() } returns Result.Failure(Error(1))
+
+        //when
+
+        val result = getHomeUseCase.getCareEmployees()
+
+        //then
+        var isFailure = false
+        result.onFailure {
+            isFailure = true
+            assert(it is Error)
+        }
+
+        assert(isFailure)
     }
 
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    @AfterEach
+    fun testDown() {
+        clearMocks(homeRepository)
     }
 }
