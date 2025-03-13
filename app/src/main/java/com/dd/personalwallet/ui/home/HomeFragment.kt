@@ -58,7 +58,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                     }
                 }
             }
-        } 
+        }
 
         homeViewModel.careEmployee.observe(viewLifecycleOwner) {
             val spacing = resources.getDimensionPixelSize(R.dimen.dashBroad_item_spacing)
