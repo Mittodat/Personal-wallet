@@ -60,14 +60,14 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }
         }
 
-//        homeViewModel.careEmployee.observe(viewLifecycleOwner) {
-//            val spacing = resources.getDimensionPixelSize(R.dimen.dashBroad_item_spacing)
-//            binding.employeeList.apply {
-//                this.layoutManager = layoutManager
-//                this.adapter = EmployeeAdapter(it)
-////                this.addItemDecoration(SpacingItemDecoration(spacingHorizontal = spacing, 0))
-//            }
-//        }
+        homeViewModel.careEmployee.observe(viewLifecycleOwner) {
+            val spacing = resources.getDimensionPixelSize(R.dimen.dashBroad_item_spacing)
+            binding.employeeList.apply {
+                this.layoutManager = layoutManager
+                this.adapter = EmployeeAdapter(it)
+//                this.addItemDecoration(SpacingItemDecoration(spacingHorizontal = spacing, 0))
+            }
+        }
 
         homeViewModel.bannerShopping.observe(viewLifecycleOwner) {
             binding.bannerViewPager.adapter = BannerAdapter(it)
