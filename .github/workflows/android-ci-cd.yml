@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
       - name: Create google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
@@ -47,6 +47,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set executable permission for gradlew
+        run: chmod +x ./gradlew
 
       - name: Setup JDK
         uses: actions/setup-java@v3
