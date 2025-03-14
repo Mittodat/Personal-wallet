@@ -26,6 +26,13 @@ jobs:
       - name: Create google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
 
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
       - name: Build Project
         run: ./gradlew assembleDebug --stacktrace
 
@@ -51,21 +58,30 @@ jobs:
       - name: Set executable permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Create google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Decode Keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
-
       - name: Create signing properties
         run: |
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > app/keystore.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> app/keystore.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> app/keystore.properties
-          echo "storeFile=keystore.jks" >> app/keystore.properties
+          printf "storePassword=%s\n" "$(echo "${{ secrets.STORE_PASSWORD }}" | base64 --decode)" > app/signing.properties
+          printf "keyAlias=%s\n" "$(echo "${{ secrets.KEY_ALIAS }}" | base64 --decode)" >> app/signing.properties
+          printf "keyPassword=%s\n" "$(echo "${{ secrets.KEY_PASSWORD }}" | base64 --decode)" >> app/signing.properties
+
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
 
       - name: Build Release APK
         run: ./gradlew assembleRelease --stacktrace
@@ -76,10 +92,13 @@ jobs:
           name: app-release
           path: app/build/outputs/apk/release/app-release.apk
 
+      - name: Decode Firebase Credentials
+        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" | base64 --decode > firebase_credentials.json
+
       - name: Deploy to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsJson: ${{ secrets.FIREBASE_CREDENTIALS }}
-          groups: testers
+          serviceCredentialsFile: firebase_credentials.json
+          groups: Tester
           file: app/build/outputs/apk/release/app-release.apk

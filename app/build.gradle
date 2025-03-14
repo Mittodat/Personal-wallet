@@ -24,10 +24,9 @@ android {
             def keystoreFile = null
             def keyStorePassword = '', alias = '', password = ''
 
-            storeFile = file('signing/debug/keystore.jks')
-            def propsFile = file('signing/debug/signing.properties')
+            def propsFile = file('signing.properties')
             if (propsFile.exists()) {
-                keystoreFile = file('signing/debug/keystore.jks')
+                keystoreFile = file('keystore.jks')
                 if (keystoreFile.exists()) {
                     def props = new Properties()
                     props.load(new FileInputStream(propsFile))
@@ -36,10 +35,10 @@ android {
                     alias = props['keyAlias']
                     password = props['keyPassword']
                 } else {
-                    println "signing/release/keystore.jks file missing"
+                    println "app/keystore.jks file missing"
                 }
             } else
-                println "signing/release/signing.properties file missing"
+                println "app/signing.properties file missing"
 
             storeFile = keystoreFile
             storePassword = keyStorePassword
