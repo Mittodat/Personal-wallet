@@ -42,7 +42,7 @@ jobs:
     name: Build & Release
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/develop'
 
     steps:
       - name: Checkout code
